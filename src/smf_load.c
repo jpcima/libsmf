@@ -503,11 +503,21 @@ extract_midi_event(const unsigned char *buf, const int buffer_length, smf_event_
 		return (-1);
 	}
 
-	if (is_sysex_byte(status))
+	if (is_sysex_byte(status)) {
+		if (c == buf) {
+			g_critical("SMF error: running status is not applicable to System Exclusive events.");
+			return (-2);
+		}
 		return (extract_sysex_event(buf, buffer_length, event, len, last_status));
+	}
 
-	if (is_escape_byte(status))
+	if (is_escape_byte(status)) {
+		if (c == buf) {
+			g_critical("SMF error: running status is not applicable to Escape events.");
+			return (-2);
+		}
 		return (extract_escaped_event(buf, buffer_length, event, len, last_status));
+	}
 
 	/* At this point, "c" points to first byte following the status byte. */
 	message_length = expected_message_length(status, c, buffer_length - (c - buf));

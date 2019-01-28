@@ -460,12 +460,12 @@ extract_escaped_event(const unsigned char *buf, const int buffer_length, smf_eve
 
 	memcpy(event->midi_buffer, c, message_length);
 
-	if (smf_event_is_valid(event)) {
+	if (!smf_event_is_valid(event)) {
 		g_critical("Escaped event is invalid.");
 		return (-1);
 	}
 
-	if (smf_event_is_system_realtime(event) || smf_event_is_system_common(event)) {
+	if (!(smf_event_is_system_realtime(event) || smf_event_is_system_common(event))) {
 		g_warning("Escaped event is not System Realtime nor System Common.");
 	}
 

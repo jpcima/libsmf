@@ -283,7 +283,7 @@ expected_sysex_length(const unsigned char status, const unsigned char *second_by
 {
 	int sysex_length, len;
 
-	assert(status == 0xF0);
+	assert(status == 0xF0 || status == 0xF7);
 
 	if (buffer_length < 3) {
 		g_critical("SMF error: end of buffer in expected_sysex_length().");
@@ -441,7 +441,7 @@ extract_escaped_event(const unsigned char *buf, const int buffer_length, smf_eve
 
 	message_length = expected_escaped_length(status, c, buffer_length - 1, &vlq_length);
 
-	if (message_length < 0)
+	if (message_length <= 0)
 		return (-3);
 
 	c += vlq_length;

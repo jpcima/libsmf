@@ -890,13 +890,17 @@ smf_load_from_memory(const void *buffer, const int buffer_length)
 	smf->file_buffer_length = buffer_length;
 	smf->next_chunk_offset = 0;
 
-	if (parse_mthd_chunk(smf))
+	if (parse_mthd_chunk(smf)) {
+		smf_delete(smf);
 		return (NULL);
+        }
 
 	for (i = 1; i <= smf->expected_number_of_tracks; i++) {
 		smf_track_t *track = smf_track_new();
-		if (track == NULL)
+		if (track == NULL) {
+			smf_delete(smf);
 			return (NULL);
+		}
 
 		smf_add_track(smf, track);
 

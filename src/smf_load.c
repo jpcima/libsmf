@@ -780,6 +780,11 @@ parse_mtrk_chunk(smf_track_t *track)
 	}
 
 	for (;;) {
+		if (track->next_event_offset == track->file_buffer_length) {
+			g_warning("SMF warning: The track did not finish with the End of Track event.");
+			break;
+		}
+
 		event = parse_next_event(track);
 
 		/* Couldn't parse an event? */
